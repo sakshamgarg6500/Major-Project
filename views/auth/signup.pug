@@ -1,0 +1,29 @@
+extends ../layouts/main_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/forms.css")
+    link(rel="stylesheet", href="/css/auth.css")
+
+block content  
+    main 
+        -var email = oldInput.email;
+        -var pass = oldInput.password;
+        -var cpass = oldInput.confirmPassword;
+        -var err = validationErrors.find(e => e.param === 'email') ? 'invalid' : '';
+        -var err2 = validationErrors.find(e => e.param === 'password') ? 'invalid' : '';
+        -var err3 = validationErrors.find(e => e.param === 'confirmPassword') ? 'invalid' : '';
+        if(errorMessage)
+            div.user-message.user-message--error 
+                p #{errorMessage}
+        form.login-form(action='/signup', method="POST", novalidate)
+            .form-control
+                label(for="email") Email
+                input(class=err, type="email", name="email", value=email)
+            .form-control 
+                label(for="password") Password
+                input(class=err2, type="password", name="password", value=pass)
+            .form-control   
+                label(for="confirmPassword") Confirm Password 
+                input(class=err3, type="password", name="confirmPassword", value=cpass)
+            input(type="hidden", name="_csrf", value=csrfToken)
+            button.btn(type="submit") Signup

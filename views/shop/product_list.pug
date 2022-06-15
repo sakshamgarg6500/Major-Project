@@ -1,0 +1,29 @@
+extends ../layouts/main_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/product.css")
+
+block content   
+    main    
+        if prods.length > 0
+            .grid
+                each product in prods
+                    - var pImage = product.image;
+                    - var pId = product._id;
+                    article.card.product-item
+                        header.card__header
+                            h1.product__title #{product.title}
+                        .card__image
+                            img(src=pImage)
+                        .card__content
+                            h2.product__price &#8377 #{product.price}
+                            p.product__description #{product.author}
+                        .card__actions
+                            a.btn(href="/products/" + pId) Details
+                            if(isAuthenticated)
+                                form(action="/cart", method="POST")
+                                    input(type="hidden", name="_csrf", value=csrfToken)
+                                    button.btn(type="submit") Add To Cart
+                                    input(type="hidden", name="productId", value=pId)
+        else
+            h1 No Products

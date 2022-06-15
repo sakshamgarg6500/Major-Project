@@ -1,0 +1,25 @@
+extends ../layouts/main_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/forms.css")
+    link(rel="stylesheet", href="/css/auth.css")
+
+block content  
+    main
+        -var email = oldInput.email;
+        -var pass = oldInput.password;
+        -var err = validationErrors.find(e => e.param === 'email') ? 'invalid' : '';
+        -var err1 = validationErrors.find(e => e.param === 'password') ? 'invalid' : '';
+        if(errorMessage)
+            div.user-message.user-message--error 
+                p #{errorMessage}
+        form.login-form(action='/login', method="POST", novalidate)
+            .form-control
+                label(for="email") Email
+                input(class=err, type="email", name="email", value=email)
+        
+            .form-control
+                label(for="password") Password
+                input(class=err1, type="password", name="password", value=pass)
+            input(type="hidden", name="_csrf", value=csrfToken)
+            button.btn(type="submit") Login 

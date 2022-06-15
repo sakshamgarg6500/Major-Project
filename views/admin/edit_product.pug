@@ -1,0 +1,52 @@
+extends ../layouts/main_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/forms.css")
+    link(rel="stylesheet", href="/css/product.css")
+
+block content  
+    main
+            -var checkEdit = editing;
+            -var error = hasError;
+            if(errorMessage)
+                div.user-message.user-message--error 
+                    p #{errorMessage}
+            if(checkEdit)
+                - var toAction = "/admin/edit_product";
+                - var idValue = product._id;
+                - var titleValue = product.title;
+                - var imageValue = product.image;
+                - var priceValue = product.price;
+                - var authorValue = product.author;
+            if(error)
+                - var err1 = validationErrors.find(e => e.param === 'title') ? 'invalid' : '';
+                - var err2 = validationErrors.find(e => e.param === 'image') ? 'invalid' : '';
+                - var err3 = validationErrors.find(e => e.param === 'price') ? 'invalid' : '';
+                - var err4 = validationErrors.find(e => e.param === 'author') ? 'invalid' : '';
+            else
+                - var toAction = "/admin/add_product";
+
+            form.product-form(action=toAction, method="POST")
+                .form-control
+                    label(for="title") Title
+                    input(class=err1, type="text", name="title", value=titleValue)
+            
+                .form-control
+                    label(for="image") Image Url
+                    input(class=err2, type="url", name="image", value=imageValue)
+            
+                .form-control
+                    label(for="price") Price
+                    input(class=err3, type="number", name="price" step="0.01", value=priceValue)
+            
+                .form-control
+                    label(for="description") Author
+                    input(class=err4, type="text", name="author", value=authorValue)
+
+                if(checkEdit)
+                    input(type="hidden", name="_csrf", value=csrfToken)
+                    button.btn(type="submit") Update Product
+                    input(type="hidden", name="pId", value=idValue)
+                else    
+                    input(type="hidden", name="_csrf", value=csrfToken)
+                    button.btn(type="submit") Add Product
